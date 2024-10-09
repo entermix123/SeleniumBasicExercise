@@ -21,13 +21,23 @@ namespace TestProject3
             driver.Dispose();
         }
 
-
-
         [SetUp]
         public void SetUp()
         {
+            ChromeOptions options = new ChromeOptions();
+            // headless mode
+            options.AddArguments("headless");
+            // bypass OS security module
+            options.AddArguments("no-sandbox");
+            // overcome limited resource problems
+            options.AddArguments("disable-dev-shm-usage");
+            // Applicable to Windows OS only
+            options.AddArguments("disable-gpu");
+            // set widows size to enshure elements are visible
+            options.AddArguments("windows-size=1920x1080");
+
             // Create object of ChromeDriver
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(options);
 
             // Add implicit wait
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);

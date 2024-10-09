@@ -13,11 +13,30 @@ namespace TestProject2
         [SetUp]
         public void SetUp()
         {
-            // Create object of ChromeDriver
-            driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            // headless mode
+            options.AddArguments("headless");
+            // bypass OS security module
+            options.AddArguments("no-sandbox");
+            // overcome limited resource problems
+            options.AddArguments("disable-dev-shm-usage");
+            // Applicable to Windows OS only
+            options.AddArguments("disable-gpu");
+            // set widows size to enshure elements are visible
+            options.AddArguments("windows-size=1920x1080");
+
+            driver = new ChromeDriver(options);
 
             // Add implicit wait
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            // Quit the driver
+            driver.Quit();
+            driver.Dispose();
         }
 
         [Test]
@@ -58,14 +77,6 @@ namespace TestProject2
             // Verify the file was created and has content
             Assert.That(File.Exists(path), Is.True, "CSV file was not created");
             Assert.That(new FileInfo(path).Length > 0, Is.True, "CSV file is empty");
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            // Quit the driver
-            driver.Quit();
-            driver.Dispose();
         }
     }
 }
