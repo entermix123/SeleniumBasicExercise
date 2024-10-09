@@ -17,10 +17,22 @@ namespace TestProject1
         IWebElement resetBtn;
         IWebElement divResult;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
-            driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            // headless mode
+            options.AddArguments("headless");
+            // bypass OS security module
+            options.AddArguments("no-sandbox");
+            // overcome limited resource problems
+            options.AddArguments("disable-dev-shm-usage");
+            // Applicable to Windows OS only
+            options.AddArguments("disable-gpu");
+            // set widows size to enshure elements are visible
+            options.AddArguments("windows-size=1920x1080");
+
+            driver = new ChromeDriver(options);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             driver.Url = "http://softuni-qa-loadbalancer-2137572849.eu-north-1.elb.amazonaws.com/number-calculator/";
 
@@ -32,7 +44,7 @@ namespace TestProject1
             divResult = driver.FindElement(By.Id("result"));
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             driver.Quit();
