@@ -1,0 +1,48 @@
+name: SeleniumWebDriver CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: build
+      run: dotnet build --no-restore
+
+    - name: run TestProject1 tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
+      run: |
+        echo "Runniong TestProject1 tests"
+        dotnet test TestProject1/TestProject1.csproj --verbosity normal
+
+    - name: run TestProject2 tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
+      run: |
+        echo "Runniong TestProject2 tests"
+        dotnet test TestProject2/TestProject2.csproj --verbosity normal
+
+    - name: run TestProject3 tests
+      env:
+        CHROMEWEBDRIVER: /usr/bin/google-chrome
+      run: |
+        echo "Runniong TestProject3 tests"
+        dotnet test TestProject3/TestProject3.csproj --verbosity normal
